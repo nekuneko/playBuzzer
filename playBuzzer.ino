@@ -11,7 +11,7 @@
  * @version 2.0
  */
 
-// Tenemos 7 escalas de notas, numeradas de 0 a 6
+// Notas musicales: Tenemos 7 escalas de notas, numeradas de 0 a 6
 uint16_t DO[7]    = {33,  65, 131, 262, 523, 1047, 2093};
 uint16_t DO_[7]   = {35,  69, 139, 277, 554, 1109, 2217};
 uint16_t RE[7]    = {37,  73, 147, 294, 587, 1175, 2349};
@@ -33,13 +33,13 @@ uint16_t SI[7]    = {62, 123, 247, 494, 988, 1976, 3951};
 #define RES8  4978
 
 // Altavoz
-const int speaker = 9;  // PIN9 --(PIEZO)-- GND
+const int speaker = 6;  // PIN6 --(PIEZO)-- GND
 
 // Velocidad de reproducción
 float tempo = 1.0;
 
-// Escala musical
-uint8_t escala = 5;
+// Escala musical, valor entre 1 y 5, de grave a aguda
+uint8_t escala = 3;
 
 // Duración de las notas (Milisegundos)
 float semicorchea = 62   * tempo;
@@ -52,9 +52,7 @@ float redonda     = 1000 * tempo;
 void setup() 
 {
   pinMode(speaker, OUTPUT);
-
-  //tocar(LA[escala]);
-  //delay(10000);
+  delay(1000);
   
   actualizarTempo(2.0);
   //cancionTiempo(escala);
@@ -258,7 +256,7 @@ void cancionTormenta (uint8_t escala)
 
     silencio(semicorchea);
 
-    // la re fa sol la
+    // la re fa sol mi
     tocar(LA[escala]);
     delay(negra);
 
@@ -276,14 +274,14 @@ void cancionTormenta (uint8_t escala)
 
 // Mitad de la canción
 
-    // RE FA RE RE FA RE
+    // re fa RE re fa RE
     tocar(RE[escala]);
     delay(corchea);
 
     tocar(FA[escala]);
     delay(corchea);
 
-    tocar(RE[escala]);
+    tocar(RE[escala+1]);
     delay(blanca);
 
     silencio(semicorchea);
@@ -355,7 +353,7 @@ void cancionTormenta (uint8_t escala)
 // Green Sleeves
 void greenSleeves (uint8_t escala)
 {
-   tocar(LA[escala+1]);
+   tocar(LA[escala]);
    delay(negra);
 
    tocar(DO[escala+1]);
@@ -650,7 +648,7 @@ void hockey (uint8_t escala)
   tocar(SOL_[escala+1]);
   delay(corchea);
 
-  tocar(SI[escala]);
+  tocar(SI[escala+1]);
   delay(blanca);
   delay(semicorchea);
 }
