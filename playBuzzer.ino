@@ -1,10 +1,29 @@
 /*
- * Programa que permite reproducir música nota a nota a través
- * de un piezo o altavoz.
+ * Programa que permite reproducir música nota a nota a través de un piezo o altavoz.
  * 
- * Recomendaciones:
+ * Recomendaciones personales:
  *  - Hacer pausas con           silencio(semicorchea);
  *  - Terminar las canciones con silencio(blanca);
+ * 
+ * Variables Globales:
+ *  - speaker:  pin analógico (pwm) al que se encuentra conectado el polo positivo de buzzer, valor positivo
+ *  - tempo:    velocidad de pulsación de las notas musicales, valor positivo flotante
+ *  - escala:   nivel de grave a agudo, posibles valores de 1 a 5.
+ * 
+ * Funciones para crear canciones:
+ *  - tocar (uint16_t nota);    // Frecuencia de la nota
+ *  - puntillo (float t_nota);  // Duración del tipo de nota para puntillo
+ *  - silencio (float t_nota);  // Duración del silencio para cada tipo de nota
+ *  - actualizarTempo (float tempo); // Velocidad de pulsación de las notas (tiempos de cada tipo de nota)
+ *  
+ * Antes de tocar una canción debe usarse la función actualizarTempo(tempo) para establecer
+ * la velocidad con la que se toca una canción. Toda canción debe finalizar con silencio(0)
+ * para apagar el buzzer y que deje de sonar.
+ * 
+ * Para crear una canción, crear una función void que tenga como argumento un uint8_t llamado
+ * 'escala'. Para tocar una nota hace falta llamar a la función tocar(uint16_t nota) y para
+ * establecer la duración temporal hay que invocar inmediatamente a la función delay(t_nota)
+ * siendo t_nota cualquier tipo de nota: semicorchea, corchea, negra, blanca, redonda.
  * 
  * @author  Javier Villaverde Ramallo
  * @fecha   17 de Febrero de 2016
@@ -12,18 +31,18 @@
  */
 
 // Notas musicales: Tenemos 7 escalas de notas, numeradas de 0 a 6
-uint16_t DO[7]    = {33,  65, 131, 262, 523, 1047, 2093};
-uint16_t DO_[7]   = {35,  69, 139, 277, 554, 1109, 2217};
-uint16_t RE[7]    = {37,  73, 147, 294, 587, 1175, 2349};
-uint16_t RE_[7]   = {39,  78, 156, 311, 622, 1245, 2489};
-uint16_t MI[7]    = {41,  82, 165, 330, 659, 1319, 2637};
-uint16_t FA[7]    = {44,  87, 175, 349, 698, 1397, 2794};
-uint16_t FA_[7]   = {46,  93, 185, 370, 740, 1480, 2960};
-uint16_t SOL[7]   = {49,  98, 196, 392, 784, 1568, 3136};
-uint16_t SOL_[7]  = {52, 104, 208, 415, 831, 1661, 3322};
-uint16_t LA[7]    = {55, 110, 220, 440, 880, 1760, 3520};
-uint16_t LA_[7]   = {58, 117, 233, 466, 932, 1865, 3729};
-uint16_t SI[7]    = {62, 123, 247, 494, 988, 1976, 3951};
+const uint16_t DO[7]    = {33,  65, 131, 262, 523, 1047, 2093};
+const uint16_t DO_[7]   = {35,  69, 139, 277, 554, 1109, 2217};
+const uint16_t RE[7]    = {37,  73, 147, 294, 587, 1175, 2349};
+const uint16_t RE_[7]   = {39,  78, 156, 311, 622, 1245, 2489};
+const uint16_t MI[7]    = {41,  82, 165, 330, 659, 1319, 2637};
+const uint16_t FA[7]    = {44,  87, 175, 349, 698, 1397, 2794};
+const uint16_t FA_[7]   = {46,  93, 185, 370, 740, 1480, 2960};
+const uint16_t SOL[7]   = {49,  98, 196, 392, 784, 1568, 3136};
+const uint16_t SOL_[7]  = {52, 104, 208, 415, 831, 1661, 3322};
+const uint16_t LA[7]    = {55, 110, 220, 440, 880, 1760, 3520};
+const uint16_t LA_[7]   = {58, 117, 233, 466, 932, 1865, 3729};
+const uint16_t SI[7]    = {62, 123, 247, 494, 988, 1976, 3951};
 
 // Notas musicales restantes
 #define SI0   31
@@ -72,43 +91,43 @@ void setup()
 void loop() { }
 
 
-void tocar (float nota)
+void tocar (uint16_t nota)
 {
   tone(speaker, nota); 
 }
 
 
-void puntillo (float nota)
+void puntillo (float tipo_nota)
 {
-  if (nota == semicorchea)
+  if (tipo_nota == semicorchea)
     delay(semicorchea + semicorchea/2.0);
-  else if (nota == corchea)
+  else if (tipo_nota == corchea)
       delay(corchea + corchea/2.0);
-  else if (nota == negra)
+  else if (tipo_nota == negra)
       delay(negra + negra/2.0);
-  else if (nota == blanca)
+  else if (tipo_nota == blanca)
       delay(blanca + blanca/2.0);
-  else if (nota == redonda)
+  else if (tipo_nota == redonda)
       delay(redonda + redonda/2.0);      
 }
 
 
-void silencio (float nota)
+void silencio (float tipo_nota)
 {
   noTone(speaker);
 
-  if (nota == semicorchea)
+  if (tipo_nota == semicorchea)
     delay(semicorchea);
-  else if (nota == corchea)
+  else if (tipo_nota == corchea)
       delay(corchea);
-  else if (nota == negra)
+  else if (tipo_nota == negra)
       delay(negra);
-  else if (nota == blanca)
+  else if (tipo_nota == blanca)
       delay(blanca);
-  else if (nota == redonda)
+  else if (tipo_nota == redonda)
       delay(redonda);
   else
-    delay(nota);    
+    delay(tipo_nota); // Una nota desconocida de diferente duración   
 }
 
 
