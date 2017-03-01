@@ -1,4 +1,4 @@
-/*
+/**
  * Programa que permite reproducir música nota a nota a través de un piezo o altavoz.
  * 
  * Recomendaciones personales:
@@ -28,9 +28,9 @@
  * @author  Javier Villaverde Ramallo
  * @fecha   17 de Febrero de 2016
  * @version 2.0
- */
+**/
 
-// Notas musicales: Tenemos 7 escalas de notas, numeradas de 0 a 6
+// Notas musicales: Cada nota se encuentra en una octava, numerada de 0 a 6
 const uint16_t DO[7]    = {33,  65, 131, 262, 523, 1047, 2093};
 const uint16_t DO_[7]   = {35,  69, 139, 277, 554, 1109, 2217};
 const uint16_t RE[7]    = {37,  73, 147, 294, 587, 1175, 2349};
